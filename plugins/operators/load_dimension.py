@@ -50,7 +50,9 @@ class LoadDimensionOperator(BaseOperator):
         if self.truncate_insert:
             truncate_sql_stmt='DELETE FROM {}'.format(self.table)
             # Truncate table
+            self.log.info("Deleting {} table's content".format(self.table))
             redshift.run(truncate_sql_stmt)
 
         # Load table
+        self.log.info("Loading data into {}.".format(self.table))
         redshift.run(insert_sql_stmt)

@@ -44,4 +44,5 @@ class LoadFactOperator(BaseOperator):
         insert_sql_stmt = 'INSERT INTO {} ({})'.format(self.table, self.select_sql_stmt)
 
         # Load table
+        self.log.info("Loading data into {}.".format(self.table))
         redshift.run(insert_sql_stmt)

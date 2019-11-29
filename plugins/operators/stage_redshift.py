@@ -15,7 +15,7 @@ class StageToRedshiftOperator(BaseOperator):
         SECRET_ACCESS_KEY '{}'
         {}
     """
-    
+
     @apply_defaults
     def __init__(self,
                  redshift_conn_id='redshift',
@@ -59,6 +59,7 @@ class StageToRedshiftOperator(BaseOperator):
         redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id)
 
         # Delete previous rows
+        self.log.info("Deleting {} table's content.".format(self.table))
         redshift.run("DELETE FROM {}".format(self.table))
 
         s3_path = "s3://{}/{}".format(self.s3_bucket, self.s3_key)
@@ -71,4 +72,5 @@ class StageToRedshiftOperator(BaseOperator):
         )
 
         # Copy data from S3 to Redshift
+        self.log.info("Copying data from S3 to Redshift. Table: {}.".format(self.table))
         redshift.run(formatted_sql)
